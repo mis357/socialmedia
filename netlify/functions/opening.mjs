@@ -1,5 +1,6 @@
 // OPENING BALANCE = cumulative already in your sheet for 20 and 21 Nov.
 // Added automatically when the cumulative starts on or before 20 Nov and the report date is after 21 Nov.
+// Saved daily entries for 20 and 21 Nov are NOT counted again; only these numbers are used for those two days.
 // To correct a number, edit it here.
 const groups = {};
 for (let i = 1; i <= 32; i++) groups[i] = { reel: 1, photo: 1 };
