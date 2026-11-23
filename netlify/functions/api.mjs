@@ -69,7 +69,7 @@ async function buildReport(store, dateKey, from) {
     }
   }
   rows.sort((a, b) => (a.date < b.date ? -1 : 1));
-    const cum = { r1: { plat: {}, collab: {} }, r2: { groups: {}, leads: {}, orders: {} } };
+  const cum = { r1: { plat: {}, collab: {} }, r2: { groups: {}, leads: {}, orders: {} } };
   const collabLog = [];
   let daily = null;
   const useOpening = from <= opening.start && dateKey > opening.through;
@@ -88,7 +88,10 @@ async function buildReport(store, dateKey, from) {
   collabLog.sort((a, b) => (a.date < b.date ? -1 : 1));
   const fd = parseInt(from.slice(8, 10), 10), td = parseInt(dateKey.slice(8, 10), 10);
   const fm = MONTHS[parseInt(from.slice(5, 7), 10) - 1], tm = MONTHS[parseInt(dateKey.slice(5, 7), 10) - 1];
-  const rangeLabel = from.slice(0, 7) === dateKey.slice(0, 7) ? fd + ' - ' + td + ' ' + tm : fd + ' ' + fm + ' - ' + td + ' ' + tm;
+  // Cumulative label runs to 31 like your sheet ("20 - 31 Nov"); numbers are counted only up to the report date.
+  // To show the real last day of the month instead (30 for Nov), use: new Date(Date.UTC(ey, em, 0)).getUTCDate()
+  const lastDay = 31;
+  const rangeLabel = from.slice(0, 7) === dateKey.slice(0, 7) ? fd + ' - ' + lastDay + ' ' + tm : fd + ' ' + fm + ' - ' + lastDay + ' ' + tm;
   return {
     layout: defaultLayout, date: dateKey, from, rangeLabel, mon: tm, dayTo: td,
     daysFilled: rows.length, openingIncluded, daily, cum, collabLog
@@ -115,6 +118,10 @@ export default async (req) => {
     if (b.fn === 'save') {
       if (!b.payload || typeof b.payload !== 'object') throw new Error('No data to save.');
       await store.setJSON('day:' + b.date, b.payload);       // same date again = replaces that day
+      return reply({ ok: true, data: { report: await buildReport(store, b.date, b.from) } });
+    }
+    if (b.fn === 'delete') {
+      await store.delete('day:' + b.date);                    // removes that one day; cumulative recalculates
       return reply({ ok: true, data: { report: await buildReport(store, b.date, b.from) } });
     }
     throw new Error('Unknown request.');
