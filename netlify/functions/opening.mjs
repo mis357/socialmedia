@@ -21,8 +21,8 @@ export const opening = {
     },
     r2: {
       groups: groups,
-      leads: { 'Total leads': 92, 'Outgoing': 2, 'Incoming': 29, 'Qualified': 13, 'Disqualified': 76, 'Un Identified': 2, 'No. Of Visits': 3, 'No. of Parties Giving Order by Visit': 3, 'No. of Parties Giving Order by Phone': 2 },
-      orders: { 'Visit Order': { pcs: 46, amt: 19076 }, 'Phone Order': { pcs: 0, amt: 0 } }
+      leads: { 'Total leads': 175, 'Outgoing': 0, 'Incoming': 10, 'Qualified': 20, 'Disqualified': 145, 'Un Identified': 0, 'No. Of Visits': 2, 'No. of Parties Giving Order by Visit': 2, 'No. of Parties Giving Order by Phone': 0 },
+      orders: { 'Visit Order': { pcs: 166, amt: 38858 }, 'Phone Order': { pcs: 0, amt: 0 } }
     }
   },
   collabLog: [
