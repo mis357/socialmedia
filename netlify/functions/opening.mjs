@@ -10,13 +10,13 @@ export const opening = {
   cum: {
     r1: {
       plat: {
-        'INSTAGRAM': { posts: { '2 Reels Post': 2, '2 Product Catalogue Image Posts': 2, '2 Story Post': 2 }, met: [196800, 41400, 346, 792, 496, 4400], spend: 472 },
-        'FACEBOOK':  { posts: { '2 Reels Post': 2, '2 Product Catalogue Image Posts': 2, '1 Story Post': 2, '1 Post in Market Place': 0 }, met: [32600, 24400, 408, 654, 4, 154], spend: 472 },
-        'YOUTUBE':   { posts: { '2 Reels Post': 2, 'Weekly 1 Long Video Post': 0, '1 Product Catalog Post': 1 }, met: [882, 0, 0, 0, 200, 0], spend: 200 },
-        'LINKED IN': { posts: { '1 Business Post': 0, '1 Reels Post': 1, '1 Product Catalog Post': 1 }, met: [104, 32, 10, 8, 0, 0], spend: 0 },
-        'THREADS':   { posts: { '1 Reels Post': 1, '1 Product Catalog Post': 1 }, met: [214, 138, 0, 0, 6, 2], spend: 0 }
+        'INSTAGRAM': { posts: { '2 Reels Post': 4, '2 Product Catalogue Image Posts': 4, '2 Story Post': 4 }, met: [174600, 35200, 212, 1396, 348, 7000], spend: 944 },
+        'FACEBOOK':  { posts: { '2 Reels Post': 4, '2 Product Catalogue Image Posts': 4, '1 Story Post': 4, '1 Post in Market Place': 4 }, met: [25600, 19200, 339, 654, 4, 345], spend: 944 },
+        'YOUTUBE':   { posts: { '2 Reels Post': 4, 'Weekly 1 Long Video Post': 0, '1 Product Catalog Post': 2 }, met: [1141, 0, 0, 0, 100, 600], spend: 400 },
+        'LINKED IN': { posts: { '1 Business Post': 0, '1 Reels Post': 2, '1 Product Catalog Post': 2 }, met: [84, 32, 5, 8, 1, 3], spend: 0 },
+        'THREADS':   { posts: { '1 Reels Post': 2, '1 Product Catalog Post': 2 }, met: [168, 113, 0, 0, 6, 4], spend: 0 }
       },
-      collab: { 'SAREE REEL': { yes: 1, no: 1, views: 0 }, 'SAREE PHOTO': { yes: 0, no: 0, views: 58300 } }
+      collab: { 'SAREE REEL': { yes: 2, no: 0, views: 9079 }, 'SAREE PHOTO': { yes: 1, no: 0, views: 58300 } }
     },
     r2: {
       groups: groups,
@@ -24,5 +24,9 @@ export const opening = {
       orders: { 'Visit Order': { pcs: 46, amt: 19076 }, 'Phone Order': { pcs: 0, amt: 0 } }
     }
   },
-  collabLog: [{ date: '2026-11-20', item: 'SAREE PHOTO', name: 'SRIJA BHOWMICK', views: 58300 }]
+  collabLog: [
+    { date: '2026-11-20', item: 'SAREE REEL', name: 'SIR', views: 7300 },
+    { date: '2026-11-20', item: 'SAREE PHOTO', name: 'SRIJA BHOWMICK', views: 58300 },
+    { date: '2026-11-21', item: 'SAREE REEL', name: 'SIR', views: 1779 }
+  ]
 };
