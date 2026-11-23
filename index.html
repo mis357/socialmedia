@@ -6,17 +6,18 @@
 <title>Daily Social Media Report</title>
 <style>
   :root{
-    --paper:#f1f4f3; --card:#ffffff; --ink:#16231f; --mute:#62736d; --line:#d5deda;
+    --paper:#f1f4f3; --card:#ffffff; --ink:#16231f; --mute:#4f625b; --line:#d5deda;
     --brand:#0f6b5c; --brand-d:#0a4d42; --soft:#e3efec; --warn:#fff4d6; --warn-ink:#7a5600; --bad:#b3261e;
+    --rline:#4a665d; --rhead:#cfe3de;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;padding-bottom:84px}
   header{background:var(--brand-d);color:#fff;padding:14px 16px}
   header h1{margin:0 0 10px;font-size:17px;font-weight:600;letter-spacing:.2px}
   .datebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .datebar label{font-size:13px;opacity:.9}
+  .datebar label{font-size:13px;opacity:.95}
   .datebar input{font:inherit;padding:7px 10px;border-radius:6px;border:0;color:var(--ink)}
-  .datebar .hint{font-size:12.5px;opacity:.85}
+  .datebar .hint{font-size:12.5px;opacity:.9;flex-basis:100%}
   nav{display:flex;gap:4px;padding:10px 12px 0;overflow-x:auto;background:var(--paper);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
   nav button{border:0;background:transparent;font:inherit;padding:10px 14px;border-radius:8px 8px 0 0;color:var(--mute);cursor:pointer;white-space:nowrap}
   nav button.on{background:var(--card);color:var(--brand-d);font-weight:600;box-shadow:inset 0 -3px 0 var(--brand)}
@@ -48,43 +49,49 @@
   textarea{width:100%;min-height:110px;resize:vertical}
   .status{background:var(--soft);padding:9px 12px;border-radius:8px;font-weight:600;color:var(--brand-d);margin-top:8px}
   .bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:12px;align-items:center;z-index:9}
-  .bar button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer}
+  .bar button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
   .bar button:hover{background:var(--brand-d)}
+  .bar button.del{background:#fff;color:var(--bad);border:1px solid var(--bad)}
+  .bar button.del:hover{background:#fdecea}
   .bar button:disabled{opacity:.55;cursor:wait}
   #msg{font-size:14px;color:var(--mute);flex:1}
   #msg.ok{color:var(--brand-d);font-weight:600}
   #msg.err{color:var(--bad);font-weight:600}
-  .warn{background:var(--warn);color:var(--warn-ink);padding:9px 12px;border-radius:8px;margin-bottom:12px;font-size:14px}
+  .warn{background:var(--warn);color:var(--warn-ink);padding:9px 12px;border-radius:8px;margin-bottom:12px;font-size:14px;font-weight:600}
   #gate{max-width:340px;margin:60px auto;background:var(--card);padding:22px;border-radius:10px;border:1px solid var(--line)}
   #gate input{width:100%;margin:10px 0}
   #gate button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;cursor:pointer}
 
-  /* generated report */
-  .rhead{margin-bottom:10px}.rhead h2{margin:0 0 4px;font-size:18px}
-  .rhead div{color:var(--mute);font-size:13.5px}
-  .tw{overflow-x:auto;margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:8px}
-  .rt{min-width:880px;font-size:13px}
-  .rt th,.rt td{border:1px solid var(--line);padding:5px 7px;text-align:right}
-  .rt th{background:var(--soft);color:var(--brand-d);font-weight:600;text-align:center}
-  .rt th.pl{text-align:left;font-size:14px;min-width:150px}
-  .rt td.lb{text-align:left}
-  .rt td[rowspan]{vertical-align:middle;background:#fbfdfc;font-weight:600}
-  .rt tfoot td{font-weight:700;background:var(--soft)}
+  /* generated report: bolder text, darker borders, stronger headers */
+  .rhead{margin-bottom:12px}
+  .rhead h2{margin:0 0 6px;font-size:21px;font-weight:800;color:#0a3d34}
+  .rhead div{color:#26342f;font-size:14px;font-weight:600}
+  .tw{overflow-x:auto;margin-bottom:18px;background:#fff;border:2px solid var(--rline);border-radius:8px}
+  .rt{min-width:880px;font-size:14px;color:#0b1a16;font-weight:600}
+  .rt th,.rt td{border:1.5px solid var(--rline);padding:6px 8px;text-align:right}
+  .rt th{background:var(--rhead);color:#06352c;font-weight:800;text-align:center}
+  .rt th.pl{text-align:left;font-size:15px;min-width:150px}
+  .rt td.lb{text-align:left;font-weight:700}
+  .rt td[rowspan]{vertical-align:middle;background:#f3f9f7;font-weight:800;font-size:15px}
+  .rt tfoot td{font-weight:800;background:var(--rhead);font-size:15px}
   .ctr{text-align:center!important}
-  .rbtn{background:#fff;border:1px solid var(--brand);color:var(--brand-d);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer;margin:0 0 12px}
-  h4.rs{margin:20px 0 8px;font-size:15px;color:var(--brand-d)}
-  .box{white-space:pre-wrap;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;min-height:50px;margin-bottom:10px}
+  .rbtn{background:#fff;border:1px solid var(--brand);color:var(--brand-d);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer;margin:0 0 12px;font-weight:600}
+  h4.rs{margin:24px 0 10px;font-size:17px;font-weight:800;color:#0a3d34;border-left:6px solid var(--brand);padding-left:10px}
+  .box{white-space:pre-wrap;background:#fff;border:2px solid var(--rline);border-radius:8px;padding:10px;min-height:50px;margin-bottom:10px;font-weight:600;color:#0b1a16}
 
   @media (max-width:640px){
     .collab{grid-template-columns:1fr 1fr}
     .collab .nm{grid-column:1 / -1}
     .task .two{grid-template-columns:1fr}
+    .bar{gap:8px;padding:8px 10px}
+    .bar button{padding:11px 12px;font-size:14px}
   }
   @media print{
     header,nav,.bar,.rbtn,.panel:not(#p-view){display:none!important}
     #p-view{display:block!important}
     body{background:#fff;padding:0}
-    .tw{overflow:visible;border:0}
+    .tw{overflow:visible}
+    .rt{min-width:0}
   }
 </style>
 </head>
@@ -101,11 +108,11 @@
   <header>
     <h1 id="ttl">Social Media Daily Report</h1>
     <div class="datebar">
-      <label for="dt">Report for date</label>
+      <label for="dt"><b>1. Select the report date</b> (the day you are reporting, usually yesterday)</label>
       <input type="date" id="dt">
       <label for="from">Cumulative from</label>
       <input type="date" id="from">
-      <span class="hint">Opens on the last working day (Sunday skipped). Cumulative = from-date up to report date. Saving a date again replaces that day.</span>
+      <span class="hint">Pick the date first, then fill the forms below. Daily columns show the date you pick. Cumulative shows from the start date to the end of the month and counts every saved day up to the report date. Saving a date again replaces that day.</span>
     </div>
   </header>
 
@@ -125,6 +132,7 @@
 
   <div class="bar">
     <button id="save" onclick="save()">Save and update cumulative</button>
+    <button id="del" class="del" onclick="delDay()">Delete this date</button>
     <div id="msg"></div>
   </div>
 </div>
@@ -138,7 +146,13 @@ const num=v=>{const x=parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,''));
 const fmt=x=>Number(x||0).toLocaleString('en-IN');
 const key=a=>esc(a.join('|'));
 function call(fn,...a){
-  const map={needsPin:{fn:'needsPin'},apiInit:{fn:'init',pin:a[0]},apiLoad:{fn:'load',pin:a[0],date:a[1],from:a[2]},apiSave:{fn:'save',pin:a[0],date:a[1],payload:a[2],from:a[3]}};
+  const map={
+    needsPin:{fn:'needsPin'},
+    apiInit:{fn:'init',pin:a[0]},
+    apiLoad:{fn:'load',pin:a[0],date:a[1],from:a[2]},
+    apiSave:{fn:'save',pin:a[0],date:a[1],payload:a[2],from:a[3]},
+    apiDelete:{fn:'delete',pin:a[0],date:a[1],from:a[2]}
+  };
   return fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(map[fn])})
     .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error||'Server error');return j.data;});
 }
@@ -160,7 +174,7 @@ async function start(){
     $('#ttl').textContent=TITLE;
     buildForms();
     const y=new Date(Date.now()-86400000);
-    while(y.getDay()===0)y.setDate(y.getDate()-1);          // Sunday is off: go back to Saturday
+    while(y.getDay()===0)y.setDate(y.getDate()-1);          // starts on the previous working day (Sunday skipped); user can pick any date
     $('#dt').value=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
     lastDate=$('#dt').value;
     syncFrom(true);
@@ -186,6 +200,7 @@ function syncFrom(force){
   if(force||!f||f>d||f.slice(0,7)!==d.slice(0,7))$('#from').value=defFrom(d);
 }
 $('#dt').addEventListener('change',async()=>{
+  if(!$('#dt').value){$('#dt').value=lastDate;return;}
   if(dirty&&!confirm('You have unsaved changes. Open another date and lose them?')){$('#dt').value=lastDate;return;}
   lastDate=$('#dt').value;syncFrom(false);await loadDate();
 });
@@ -201,9 +216,9 @@ function buildForms(){
   // REPORT 1
   let h='';
   LY.platforms.forEach(p=>{
-    h+=`<section class="card"><h3>${esc(p.name)}</h3><div class="sub">Posts done on this date</div>`;
+    h+=`<section class="card"><h3>${esc(p.name)}</h3><div class="sub">Posts done on the selected date</div>`;
     p.items.forEach(it=>{h+=`<label class="row"><span>${esc(it)}</span><input type="number" min="0" inputmode="numeric" data-k="${key(['r1','plat',p.name,'posts',it])}"></label>`;});
-    h+=`<div class="sub">${esc(p.name)} totals for this date (you can type N/A)</div><div class="g3">`;
+    h+=`<div class="sub">${esc(p.name)} totals for the selected date (you can type N/A)</div><div class="g3">`;
     METRICS.forEach((m,i)=>{h+=`<label class="f">${m}<input type="text" inputmode="decimal" data-k="${key(['r1','plat',p.name,'met',i])}"></label>`;});
     h+='</div>';
     if(p.spend)h+=`<label class="f w">Spent (₹)<input type="text" inputmode="decimal" data-k="${key(['r1','plat',p.name,'spend'])}"></label>`;
@@ -295,17 +310,28 @@ async function save(){
   }catch(e){say(e.message,'err');}
   b.disabled=false;
 }
+async function delDay(){
+  if(!confirm('Delete the saved report for '+$('#dt').value+'? This cannot be undone.'))return;
+  const b=$('#del');b.disabled=true;say('Deleting…');
+  try{
+    const r=await call('apiDelete',PIN,$('#dt').value,$('#from').value);
+    fill(null);renderReport(r.report);
+    say('Deleted. Cumulative updated.','ok');
+  }catch(e){say(e.message,'err');}
+  b.disabled=false;
+}
 
 /* ---------- generated report ---------- */
 function renderReport(R){
   REPORT=R;
-  const D=R.daily||{},C=R.cum,N=R.dayTo,rng=R.rangeLabel;
+  const D=R.daily||{},C=R.cum,rng=R.rangeLabel;
+  const dl='Daily ('+R.dayTo+' '+R.mon+')';                 // daily columns show the date the user selected
   const d1=D.r1||{},d2=D.r2||{},d3=D.r3||{};
   const v=x=>(x===undefined||x===null||x==='')?'':esc(x);
   const nice=new Date(R.date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
   let h=`<button class="rbtn" onclick="window.print()">Print / Save as PDF</button>
-   <div class="rhead"><h2>${esc(TITLE)}</h2><div>Report date: <b>${nice}</b> &nbsp;|&nbsp; Cumulative: <b>${rng}</b> &nbsp;|&nbsp; Days saved in range: ${R.daysFilled}${R.openingIncluded?' &nbsp;|&nbsp; Includes opening balance of 20 - 21 Nov':''}</div></div>`;
-  if(!R.daily)h+=`<div class="warn">No report saved for ${nice} yet. Daily columns are empty; cumulative shows the earlier days of the month.</div>`;
+   <div class="rhead"><h2>${esc(TITLE)}</h2><div>Daily report date: <b>${nice}</b> &nbsp;|&nbsp; Cumulative: <b>${rng}</b> (counted up to ${R.dayTo} ${R.mon}) &nbsp;|&nbsp; Days saved in range: ${R.daysFilled}${R.openingIncluded?' &nbsp;|&nbsp; Includes opening balance of 20 - 21 Nov':''}</div></div>`;
+  if(!R.daily)h+=`<div class="warn">No report saved for ${nice} yet. Daily columns are empty; cumulative shows the earlier saved days.</div>`;
 
   /* REPORT 1 */
   let tD=0,tC=0;
@@ -313,7 +339,7 @@ function renderReport(R){
     const pd=(d1.plat||{})[p.name]||{},pc=(C.r1.plat||{})[p.name]||{posts:{},met:[0,0,0,0,0,0],spend:0};
     const pdm=pd.met||{},pdp=pd.posts||{},span=p.items.length;
     if(p.spend){tD+=num(pd.spend);tC+=num(pc.spend);}
-    h+=`<div class="tw"><table class="rt"><thead><tr><th rowspan="2" class="pl">${esc(p.name)}</th><th colspan="2">Posts</th><th colspan="6">Daily</th><th colspan="6">Cumulative (${rng})</th>${p.spend?'<th colspan="2">Spent report</th>':''}</tr>
+    h+=`<div class="tw"><table class="rt"><thead><tr><th rowspan="2" class="pl">${esc(p.name)}</th><th colspan="2">Posts</th><th colspan="6">${dl}</th><th colspan="6">Cumulative (${rng})</th>${p.spend?'<th colspan="2">Spent report</th>':''}</tr>
       <tr><th>Daily</th><th>Cumulative</th>${METRICS.map(m=>'<th>'+m+'</th>').join('')}${METRICS.map(m=>'<th>'+m+'</th>').join('')}${p.spend?'<th>Daily</th><th>Cumulative</th>':''}</tr></thead><tbody>`;
     p.items.forEach((it,ix)=>{
       h+=`<tr><td class="lb">${esc(it)}</td><td>${v(pdp[it])}</td><td>${fmt(pc.posts[it])}</td>`;
@@ -326,7 +352,7 @@ function renderReport(R){
     });
     h+='</tbody></table></div>';
   });
-  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Total spent (all platforms)</th><th>Daily</th><th>Cumulative</th></tr></thead><tbody><tr><td class="lb">₹</td><td>${fmt(tD)}</td><td>${fmt(tC)}</td></tr></tbody></table></div>`;
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Total spent (all platforms)</th><th>${dl}</th><th>Cumulative (${rng})</th></tr></thead><tbody><tr><td class="lb">₹</td><td>${fmt(tD)}</td><td>${fmt(tC)}</td></tr></tbody></table></div>`;
 
   /* collaborations */
   h+=`<h4 class="rs">Collaborations</h4><div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Item</th><th>Cum. Yes</th><th>Cum. No</th><th>Cum. views</th></tr></thead><tbody>`;
@@ -340,17 +366,17 @@ function renderReport(R){
 
   /* REPORT 2 */
   const g2=d2.groups||{};
-  h+=`<h4 class="rs">Report 2 · Facebook groups</h4><div class="tw"><table class="rt" style="min-width:560px"><thead><tr><th rowspan="2">No.</th><th rowspan="2" class="pl">Group</th><th colspan="2">Daily</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>Reel / Shorts</th><th>Catalog / Photo</th><th>Reel / Shorts</th><th>Catalog / Photo</th></tr></thead><tbody>`;
+  h+=`<h4 class="rs">Report 2 · Facebook groups</h4><div class="tw"><table class="rt" style="min-width:560px"><thead><tr><th rowspan="2">No.</th><th rowspan="2" class="pl">Group</th><th colspan="2">${dl}</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>Reel / Shorts</th><th>Catalog / Photo</th><th>Reel / Shorts</th><th>Catalog / Photo</th></tr></thead><tbody>`;
   LY.groups.forEach(g=>{
     const dd=g2[g.no]||{},cc=(C.r2.groups||{})[g.no]||{reel:0,photo:0};
     h+=`<tr><td class="ctr">${esc(g.no)}</td><td class="lb">${esc(g.name)}</td><td>${v(dd.reel)}</td><td>${v(dd.photo)}</td><td>${fmt(cc.reel)}</td><td>${fmt(cc.photo)}</td></tr>`;
   });
   h+='</tbody></table></div>';
-  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Leads</th><th>Daily</th><th>Cumulative</th></tr></thead><tbody>`;
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Leads</th><th>${dl}</th><th>Cumulative (${rng})</th></tr></thead><tbody>`;
   LY.leads.forEach(l=>{h+=`<tr><td class="lb">${esc(l)}</td><td>${v((d2.leads||{})[l])}</td><td>${fmt((C.r2.leads||{})[l])}</td></tr>`;});
   h+='</tbody></table></div>';
   let dp=0,da=0,cp=0,ca=0;
-  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th rowspan="2" class="pl">Orders</th><th colspan="2">Daily</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>PCS</th><th>Amount</th><th>PCS</th><th>Amount</th></tr></thead><tbody>`;
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th rowspan="2" class="pl">Orders</th><th colspan="2">${dl}</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>PCS</th><th>Amount</th><th>PCS</th><th>Amount</th></tr></thead><tbody>`;
   LY.orders.forEach(o=>{
     const dd=(d2.orders||{})[o]||{},cc=(C.r2.orders||{})[o]||{pcs:0,amt:0};
     dp+=num(dd.pcs);da+=num(dd.amt);cp+=cc.pcs;ca+=cc.amt;
@@ -360,7 +386,7 @@ function renderReport(R){
 
   /* REPORT 3 */
   const t3=d3.tasks||{};let done=0;
-  h+=`<h4 class="rs">Report 3 · Daily tasks</h4><div class="tw"><table class="rt" style="min-width:0"><thead><tr><th>No.</th><th class="pl">Task</th><th>Answer</th><th>If Yes, explain</th></tr></thead><tbody>`;
+  h+=`<h4 class="rs">Report 3 · Daily tasks (${R.dayTo} ${R.mon})</h4><div class="tw"><table class="rt" style="min-width:0"><thead><tr><th>No.</th><th class="pl">Task</th><th>Answer</th><th>If Yes, explain</th></tr></thead><tbody>`;
   LY.tasks.forEach((t,i)=>{
     const x=t3[i]||{};if(isDone(x.answer))done++;
     h+=`<tr><td class="ctr">${i+1}</td><td class="lb">${esc(t)}</td><td class="ctr">${v(x.answer)}</td><td class="lb">${v(x.details)}</td></tr>`;
