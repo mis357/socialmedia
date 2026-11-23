@@ -69,12 +69,18 @@ async function buildReport(store, dateKey, from) {
     }
   }
   rows.sort((a, b) => (a.date < b.date ? -1 : 1));
-  const cum = { r1: { plat: {}, collab: {} }, r2: { groups: {}, leads: {}, orders: {} } };
+    const cum = { r1: { plat: {}, collab: {} }, r2: { groups: {}, leads: {}, orders: {} } };
   const collabLog = [];
   let daily = null;
-  rows.forEach(x => { addInto(cum, x.data, collabLog, x.date); if (x.date === dateKey) daily = x.data; });
+  const useOpening = from <= opening.start && dateKey > opening.through;
+  rows.forEach(x => {
+    if (x.date === dateKey) daily = x.data;
+    // 20-21 Nov come ONLY from the opening cumulative, never from saved daily entries
+    if (useOpening && x.date <= opening.through) return;
+    addInto(cum, x.data, collabLog, x.date);
+  });
   let openingIncluded = false;
-  if (from <= opening.start && dateKey > opening.through) {
+  if (useOpening) {
     addCum(cum, opening.cum);
     (opening.collabLog || []).forEach(x => collabLog.push(x));
     openingIncluded = true;
