@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Social Media Report</title>
+<style>
+  :root{
+    --paper:#f1f4f3; --card:#ffffff; --ink:#16231f; --mute:#62736d; --line:#d5deda;
+    --brand:#0f6b5c; --brand-d:#0a4d42; --soft:#e3efec; --warn:#fff4d6; --warn-ink:#7a5600; --bad:#b3261e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;padding-bottom:84px}
+  header{background:var(--brand-d);color:#fff;padding:14px 16px}
+  header h1{margin:0 0 10px;font-size:17px;font-weight:600;letter-spacing:.2px}
+  .datebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .datebar label{font-size:13px;opacity:.9}
+  .datebar input{font:inherit;padding:7px 10px;border-radius:6px;border:0;color:var(--ink)}
+  .datebar .hint{font-size:12.5px;opacity:.85}
+  nav{display:flex;gap:4px;padding:10px 12px 0;overflow-x:auto;background:var(--paper);position:sticky;top:0;z-index:5;border-bottom:1px solid var(--line)}
+  nav button{border:0;background:transparent;font:inherit;padding:10px 14px;border-radius:8px 8px 0 0;color:var(--mute);cursor:pointer;white-space:nowrap}
+  nav button.on{background:var(--card);color:var(--brand-d);font-weight:600;box-shadow:inset 0 -3px 0 var(--brand)}
+  main{max-width:1100px;margin:0 auto;padding:14px 12px}
+  .panel{display:none}.panel.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+  .card h3{margin:0 0 8px;font-size:16px;color:var(--brand-d)}
+  .sub{font-size:13px;color:var(--mute);margin:10px 0 6px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:0}
+  .row span{flex:1}
+  input,select,textarea{font:inherit;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 9px;background:#fff;max-width:100%}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:1px;border-color:var(--brand)}
+  .row input[type=number]{width:96px;text-align:right}
+  .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+  .f{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--mute)}
+  .f input,.f select{width:100%}
+  .w{margin-top:10px;max-width:260px}
+  table{border-collapse:collapse;width:100%}
+  .ent th,.ent td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+  .ent th{color:var(--mute);font-weight:600;font-size:12.5px}
+  .ent input[type=number]{width:84px;text-align:right}
+  .collab{display:grid;grid-template-columns:1.2fr 90px 1.4fr 110px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .collab:last-child{border-bottom:0}
+  .task{padding:8px 0;border-bottom:1px dashed var(--line)}
+  .task:last-child{border-bottom:0}
+  .task b{display:block;margin-bottom:5px}
+  .task .two{display:grid;grid-template-columns:150px 1fr;gap:8px}
+  textarea{width:100%;min-height:110px;resize:vertical}
+  .status{background:var(--soft);padding:9px 12px;border-radius:8px;font-weight:600;color:var(--brand-d);margin-top:8px}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:12px;align-items:center;z-index:9}
+  .bar button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer}
+  .bar button:hover{background:var(--brand-d)}
+  .bar button:disabled{opacity:.55;cursor:wait}
+  #msg{font-size:14px;color:var(--mute);flex:1}
+  #msg.ok{color:var(--brand-d);font-weight:600}
+  #msg.err{color:var(--bad);font-weight:600}
+  .warn{background:var(--warn);color:var(--warn-ink);padding:9px 12px;border-radius:8px;margin-bottom:12px;font-size:14px}
+  #gate{max-width:340px;margin:60px auto;background:var(--card);padding:22px;border-radius:10px;border:1px solid var(--line)}
+  #gate input{width:100%;margin:10px 0}
+  #gate button{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:10px 16px;font:inherit;cursor:pointer}
+
+  /* generated report */
+  .rhead{margin-bottom:10px}.rhead h2{margin:0 0 4px;font-size:18px}
+  .rhead div{color:var(--mute);font-size:13.5px}
+  .tw{overflow-x:auto;margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:8px}
+  .rt{min-width:880px;font-size:13px}
+  .rt th,.rt td{border:1px solid var(--line);padding:5px 7px;text-align:right}
+  .rt th{background:var(--soft);color:var(--brand-d);font-weight:600;text-align:center}
+  .rt th.pl{text-align:left;font-size:14px;min-width:150px}
+  .rt td.lb{text-align:left}
+  .rt td[rowspan]{vertical-align:middle;background:#fbfdfc;font-weight:600}
+  .rt tfoot td{font-weight:700;background:var(--soft)}
+  .ctr{text-align:center!important}
+  .rbtn{background:#fff;border:1px solid var(--brand);color:var(--brand-d);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer;margin:0 0 12px}
+  h4.rs{margin:20px 0 8px;font-size:15px;color:var(--brand-d)}
+  .box{white-space:pre-wrap;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;min-height:50px;margin-bottom:10px}
+
+  @media (max-width:640px){
+    .collab{grid-template-columns:1fr 1fr}
+    .collab .nm{grid-column:1 / -1}
+    .task .two{grid-template-columns:1fr}
+  }
+  @media print{
+    header,nav,.bar,.rbtn,.panel:not(#p-view){display:none!important}
+    #p-view{display:block!important}
+    body{background:#fff;padding:0}
+    .tw{overflow:visible;border:0}
+  }
+</style>
+</head>
+<body>
+
+<div id="gate" style="display:none">
+  <b>Enter access code</b>
+  <input id="pin" type="password" autocomplete="off">
+  <button onclick="startWithPin()">Open</button>
+  <div id="gerr" style="color:var(--bad);margin-top:8px"></div>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <h1 id="ttl">Social Media Daily Report</h1>
+    <div class="datebar">
+      <label for="dt">Report for date</label>
+      <input type="date" id="dt">
+      <label for="from">Cumulative from</label>
+      <input type="date" id="from">
+      <span class="hint">Opens on the last working day (Sunday skipped). Cumulative = from-date up to report date. Saving a date again replaces that day.</span>
+    </div>
+  </header>
+
+  <nav id="tabs">
+    <button class="on" data-t="p1">1 · Social media</button>
+    <button data-t="p2">2 · Groups &amp; orders</button>
+    <button data-t="p3">3 · Tasks</button>
+    <button data-t="view">Report</button>
+  </nav>
+
+  <main>
+    <div class="panel on" id="p-p1"></div>
+    <div class="panel" id="p-p2"></div>
+    <div class="panel" id="p-p3"></div>
+    <div class="panel" id="p-view"></div>
+  </main>
+
+  <div class="bar">
+    <button id="save" onclick="save()">Save and update cumulative</button>
+    <div id="msg"></div>
+  </div>
+</div>
+
+<script>
+const METRICS=['Views','Reach','Click','Profile Visit','Follow/Subscribe','Interactions'];
+let CUM_START='',LY=null, PIN='', TITLE='', REPORT=null, dirty=false, lastDate='';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=v=>{const x=parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,''));return isNaN(x)?0:x};
+const fmt=x=>Number(x||0).toLocaleString('en-IN');
+const key=a=>esc(a.join('|'));
+function call(fn,...a){
+  const map={needsPin:{fn:'needsPin'},apiInit:{fn:'init',pin:a[0]},apiLoad:{fn:'load',pin:a[0],date:a[1],from:a[2]},apiSave:{fn:'save',pin:a[0],date:a[1],payload:a[2],from:a[3]}};
+  return fetch('/api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(map[fn])})
+    .then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.error||'Server error');return j.data;});
+}
+function say(t,c){const m=$('#msg');m.textContent=t||'';m.className=c||'';}
+
+/* ---------- start ---------- */
+(async function(){
+  try{
+    const need=await call('needsPin');
+    if(need){$('#gate').style.display='block';}else{start();}
+  }catch(e){document.body.innerHTML='<p style="padding:20px;color:#b3261e">'+esc(e.message)+'</p>';}
+})();
+function startWithPin(){PIN=$('#pin').value;start();}
+async function start(){
+  try{
+    const r=await call('apiInit',PIN);
+    LY=r.layout;TITLE=r.title;CUM_START=r.cumStart||'';
+    $('#gate').style.display='none';$('#app').style.display='block';
+    $('#ttl').textContent=TITLE;
+    buildForms();
+    const y=new Date(Date.now()-86400000);
+    while(y.getDay()===0)y.setDate(y.getDate()-1);          // Sunday is off: go back to Saturday
+    $('#dt').value=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+    lastDate=$('#dt').value;
+    syncFrom(true);
+    await loadDate();
+  }catch(e){$('#gerr').textContent=e.message;$('#gate').style.display='block';}
+}
+
+/* ---------- tabs ---------- */
+$('#tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t));
+  window.scrollTo(0,0);
+});
+function openTab(t){document.querySelector('#tabs button[data-t="'+t+'"]').click();}
+
+document.addEventListener('input',e=>{
+  if(e.target.dataset&&e.target.dataset.k){dirty=true;updStatus();}
+});
+function defFrom(d){return(CUM_START&&d.slice(0,7)===CUM_START.slice(0,7)&&d>=CUM_START)?CUM_START:d.slice(0,7)+'-01';}
+function syncFrom(force){
+  const d=$('#dt').value,f=$('#from').value;
+  if(force||!f||f>d||f.slice(0,7)!==d.slice(0,7))$('#from').value=defFrom(d);
+}
+$('#dt').addEventListener('change',async()=>{
+  if(dirty&&!confirm('You have unsaved changes. Open another date and lose them?')){$('#dt').value=lastDate;return;}
+  lastDate=$('#dt').value;syncFrom(false);await loadDate();
+});
+$('#from').addEventListener('change',async()=>{      // only recalculates the report, form is untouched
+  if(!$('#from').value||$('#from').value>$('#dt').value){syncFrom(true);}
+  say('Recalculating…');
+  try{const r=await call('apiLoad',PIN,$('#dt').value,$('#from').value);renderReport(r.report);say('Cumulative now '+r.report.rangeLabel+'.','ok');}
+  catch(e){say(e.message,'err');}
+});
+
+/* ---------- build entry forms ---------- */
+function buildForms(){
+  // REPORT 1
+  let h='';
+  LY.platforms.forEach(p=>{
+    h+=`<section class="card"><h3>${esc(p.name)}</h3><div class="sub">Posts done on this date</div>`;
+    p.items.forEach(it=>{h+=`<label class="row"><span>${esc(it)}</span><input type="number" min="0" inputmode="numeric" data-k="${key(['r1','plat',p.name,'posts',it])}"></label>`;});
+    h+=`<div class="sub">${esc(p.name)} totals for this date (you can type N/A)</div><div class="g3">`;
+    METRICS.forEach((m,i)=>{h+=`<label class="f">${m}<input type="text" inputmode="decimal" data-k="${key(['r1','plat',p.name,'met',i])}"></label>`;});
+    h+='</div>';
+    if(p.spend)h+=`<label class="f w">Spent (₹)<input type="text" inputmode="decimal" data-k="${key(['r1','plat',p.name,'spend'])}"></label>`;
+    h+='</section>';
+  });
+  h+=`<section class="card"><h3>Collaborations</h3>`;
+  LY.collab.forEach(c=>{
+    h+=`<div class="collab"><b>${esc(c)}</b>
+      <select data-k="${key(['r1','collab',c,'done'])}"><option value=""></option><option>Yes</option><option>No</option></select>
+      <input class="nm" type="text" placeholder="Collaborator name" data-k="${key(['r1','collab',c,'name'])}">
+      <input type="text" inputmode="numeric" placeholder="Views" data-k="${key(['r1','collab',c,'views'])}"></div>`;
+  });
+  h+='</section>';
+  $('#p-p1').innerHTML=h;
+
+  // REPORT 2
+  h=`<section class="card"><h3>Facebook groups</h3><table class="ent"><thead><tr><th>No.</th><th>Group</th><th>Reel / Shorts</th><th>Catalog / Photo</th></tr></thead><tbody>`;
+  LY.groups.forEach(g=>{
+    h+=`<tr><td>${esc(g.no)}</td><td>${esc(g.name)}</td>
+     <td><select data-k="${key(['r2','groups',g.no,'reel'])}"><option value=""></option><option>Yes</option></select></td>
+     <td><select data-k="${key(['r2','groups',g.no,'photo'])}"><option value=""></option><option>Yes</option></select></td></tr>`;
+  });
+  h+=`</tbody></table></section><section class="card"><h3>Leads</h3>`;
+  LY.leads.forEach(l=>{h+=`<label class="row"><span>${esc(l)}</span><input type="number" min="0" inputmode="numeric" data-k="${key(['r2','leads',l])}"></label>`;});
+  h+=`</section><section class="card"><h3>Orders</h3><table class="ent"><thead><tr><th></th><th>PCS</th><th>Amount (₹)</th></tr></thead><tbody>`;
+  LY.orders.forEach(o=>{
+    h+=`<tr><td>${esc(o)}</td><td><input type="number" min="0" inputmode="numeric" data-k="${key(['r2','orders',o,'pcs'])}"></td>
+     <td><input type="number" min="0" inputmode="decimal" style="width:120px" data-k="${key(['r2','orders',o,'amt'])}"></td></tr>`;
+  });
+  h+='</tbody></table></section>';
+  $('#p-p2').innerHTML=h;
+
+  // REPORT 3
+  h=`<datalist id="ans"><option>Yes</option><option>No</option><option>Done</option><option>Pending</option></datalist><section class="card"><h3>Daily tasks</h3>`;
+  LY.tasks.forEach((t,i)=>{
+    h+=`<div class="task"><b>${i+1}. ${esc(t)}</b><div class="two">
+      <input list="ans" placeholder="Answer" data-k="${key(['r3','tasks',i,'answer'])}">
+      <input type="text" placeholder="If Yes, explain" data-k="${key(['r3','tasks',i,'details'])}"></div></div>`;
+  });
+  h+=`<div class="status" id="r3s"></div></section>`;
+  LY.boxes.forEach((b,i)=>{h+=`<section class="card"><h3>${esc(b)}</h3><textarea data-k="${key(['r3','box',i])}"></textarea></section>`;});
+  $('#p-p3').innerHTML=h;
+}
+
+const isDone=v=>/^(y|yes|done|complete|completed|✓|✔)/i.test(String(v||'').trim());
+function updStatus(){
+  let done=0;LY.tasks.forEach((t,i)=>{const el=document.querySelector('[data-k="r3|tasks|'+i+'|answer"]');if(el&&isDone(el.value))done++;});
+  const s=$('#r3s');if(s)s.textContent='Total completed '+done+' / Pending '+(LY.tasks.length-done);
+}
+
+/* ---------- read / write form ---------- */
+function collect(){
+  const out={};let any=false;
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    const v=el.value.trim();if(v==='')return;
+    any=true;const p=el.dataset.k.split('|');let o=out;
+    for(let i=0;i<p.length-1;i++){o=o[p[i]]||(o[p[i]]={});}
+    o[p[p.length-1]]=v;
+  });
+  return any?out:null;
+}
+function fill(data){
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    let o=data;
+    if(o){for(const k of el.dataset.k.split('|')){o=(o==null)?undefined:o[k];}}
+    el.value=(data&&o!=null)?o:'';
+  });
+  dirty=false;updStatus();
+}
+
+/* ---------- server calls ---------- */
+async function loadDate(){
+  say('Loading…');
+  try{
+    const r=await call('apiLoad',PIN,$('#dt').value,$('#from').value);
+    fill(r.saved);renderReport(r.report);
+    say((new Date($('#dt').value+'T00:00:00').getDay()===0?'Note: this date is a Sunday. ':'')+(r.saved?'This date already has a saved report. You can edit and save again.':'No report saved for this date yet.'));
+  }catch(e){say(e.message,'err');}
+}
+async function save(){
+  const data=collect();
+  if(!data){say('Nothing is filled in. Enter at least one value.','err');return;}
+  const b=$('#save');b.disabled=true;say('Saving…');
+  try{
+    const r=await call('apiSave',PIN,$('#dt').value,data,$('#from').value);
+    dirty=false;renderReport(r.report);
+    say('Saved. Cumulative '+r.report.rangeLabel+' updated.','ok');
+    openTab('view');
+  }catch(e){say(e.message,'err');}
+  b.disabled=false;
+}
+
+/* ---------- generated report ---------- */
+function renderReport(R){
+  REPORT=R;
+  const D=R.daily||{},C=R.cum,N=R.dayTo,rng=R.rangeLabel;
+  const d1=D.r1||{},d2=D.r2||{},d3=D.r3||{};
+  const v=x=>(x===undefined||x===null||x==='')?'':esc(x);
+  const nice=new Date(R.date+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  let h=`<button class="rbtn" onclick="window.print()">Print / Save as PDF</button>
+   <div class="rhead"><h2>${esc(TITLE)}</h2><div>Report date: <b>${nice}</b> &nbsp;|&nbsp; Cumulative: <b>${rng}</b> &nbsp;|&nbsp; Days saved in range: ${R.daysFilled}${R.openingIncluded?' &nbsp;|&nbsp; Includes opening balance of 20 - 21 Nov':''}</div></div>`;
+  if(!R.daily)h+=`<div class="warn">No report saved for ${nice} yet. Daily columns are empty; cumulative shows the earlier days of the month.</div>`;
+
+  /* REPORT 1 */
+  let tD=0,tC=0;
+  LY.platforms.forEach(p=>{
+    const pd=(d1.plat||{})[p.name]||{},pc=(C.r1.plat||{})[p.name]||{posts:{},met:[0,0,0,0,0,0],spend:0};
+    const pdm=pd.met||{},pdp=pd.posts||{},span=p.items.length;
+    if(p.spend){tD+=num(pd.spend);tC+=num(pc.spend);}
+    h+=`<div class="tw"><table class="rt"><thead><tr><th rowspan="2" class="pl">${esc(p.name)}</th><th colspan="2">Posts</th><th colspan="6">Daily</th><th colspan="6">Cumulative (${rng})</th>${p.spend?'<th colspan="2">Spent report</th>':''}</tr>
+      <tr><th>Daily</th><th>Cumulative</th>${METRICS.map(m=>'<th>'+m+'</th>').join('')}${METRICS.map(m=>'<th>'+m+'</th>').join('')}${p.spend?'<th>Daily</th><th>Cumulative</th>':''}</tr></thead><tbody>`;
+    p.items.forEach((it,ix)=>{
+      h+=`<tr><td class="lb">${esc(it)}</td><td>${v(pdp[it])}</td><td>${fmt(pc.posts[it])}</td>`;
+      if(ix===0){
+        for(let i=0;i<6;i++)h+=`<td rowspan="${span}">${v(pdm[i])}</td>`;
+        for(let i=0;i<6;i++)h+=`<td rowspan="${span}">${fmt(pc.met[i])}</td>`;
+        if(p.spend)h+=`<td rowspan="${span}">${v(pd.spend)}</td><td rowspan="${span}">${fmt(pc.spend)}</td>`;
+      }
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+  });
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Total spent (all platforms)</th><th>Daily</th><th>Cumulative</th></tr></thead><tbody><tr><td class="lb">₹</td><td>${fmt(tD)}</td><td>${fmt(tC)}</td></tr></tbody></table></div>`;
+
+  /* collaborations */
+  h+=`<h4 class="rs">Collaborations</h4><div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Item</th><th>Cum. Yes</th><th>Cum. No</th><th>Cum. views</th></tr></thead><tbody>`;
+  LY.collab.forEach(c=>{const x=(C.r1.collab||{})[c]||{yes:0,no:0,views:0};h+=`<tr><td class="lb">${esc(c)}</td><td>${x.yes}</td><td>${x.no}</td><td>${fmt(x.views)}</td></tr>`;});
+  h+='</tbody></table></div>';
+  if(R.collabLog&&R.collabLog.length){
+    h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th>Date</th><th>Item</th><th>Collaborator</th><th>Views</th></tr></thead><tbody>`;
+    R.collabLog.forEach(x=>{h+=`<tr><td class="ctr">${esc(x.date.slice(8,10)+'/'+x.date.slice(5,7))}</td><td class="lb">${esc(x.item)}</td><td class="lb">${esc(x.name)}</td><td>${fmt(x.views)}</td></tr>`;});
+    h+='</tbody></table></div>';
+  }
+
+  /* REPORT 2 */
+  const g2=d2.groups||{};
+  h+=`<h4 class="rs">Report 2 · Facebook groups</h4><div class="tw"><table class="rt" style="min-width:560px"><thead><tr><th rowspan="2">No.</th><th rowspan="2" class="pl">Group</th><th colspan="2">Daily</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>Reel / Shorts</th><th>Catalog / Photo</th><th>Reel / Shorts</th><th>Catalog / Photo</th></tr></thead><tbody>`;
+  LY.groups.forEach(g=>{
+    const dd=g2[g.no]||{},cc=(C.r2.groups||{})[g.no]||{reel:0,photo:0};
+    h+=`<tr><td class="ctr">${esc(g.no)}</td><td class="lb">${esc(g.name)}</td><td>${v(dd.reel)}</td><td>${v(dd.photo)}</td><td>${fmt(cc.reel)}</td><td>${fmt(cc.photo)}</td></tr>`;
+  });
+  h+='</tbody></table></div>';
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th class="pl">Leads</th><th>Daily</th><th>Cumulative</th></tr></thead><tbody>`;
+  LY.leads.forEach(l=>{h+=`<tr><td class="lb">${esc(l)}</td><td>${v((d2.leads||{})[l])}</td><td>${fmt((C.r2.leads||{})[l])}</td></tr>`;});
+  h+='</tbody></table></div>';
+  let dp=0,da=0,cp=0,ca=0;
+  h+=`<div class="tw"><table class="rt" style="min-width:0"><thead><tr><th rowspan="2" class="pl">Orders</th><th colspan="2">Daily</th><th colspan="2">Cumulative (${rng})</th></tr><tr><th>PCS</th><th>Amount</th><th>PCS</th><th>Amount</th></tr></thead><tbody>`;
+  LY.orders.forEach(o=>{
+    const dd=(d2.orders||{})[o]||{},cc=(C.r2.orders||{})[o]||{pcs:0,amt:0};
+    dp+=num(dd.pcs);da+=num(dd.amt);cp+=cc.pcs;ca+=cc.amt;
+    h+=`<tr><td class="lb">${esc(o)}</td><td>${v(dd.pcs)}</td><td>${v(dd.amt)}</td><td>${fmt(cc.pcs)}</td><td>${fmt(cc.amt)}</td></tr>`;
+  });
+  h+=`</tbody><tfoot><tr><td class="lb">TOTAL ORDER</td><td>${fmt(dp)}</td><td>${fmt(da)}</td><td>${fmt(cp)}</td><td>${fmt(ca)}</td></tr></tfoot></table></div>`;
+
+  /* REPORT 3 */
+  const t3=d3.tasks||{};let done=0;
+  h+=`<h4 class="rs">Report 3 · Daily tasks</h4><div class="tw"><table class="rt" style="min-width:0"><thead><tr><th>No.</th><th class="pl">Task</th><th>Answer</th><th>If Yes, explain</th></tr></thead><tbody>`;
+  LY.tasks.forEach((t,i)=>{
+    const x=t3[i]||{};if(isDone(x.answer))done++;
+    h+=`<tr><td class="ctr">${i+1}</td><td class="lb">${esc(t)}</td><td class="ctr">${v(x.answer)}</td><td class="lb">${v(x.details)}</td></tr>`;
+  });
+  h+=`</tbody><tfoot><tr><td colspan="4" class="lb">Total completed ${done} / Pending ${LY.tasks.length-done}</td></tr></tfoot></table></div>`;
+  LY.boxes.forEach((b,i)=>{h+=`<h4 class="rs">${esc(b)}</h4><div class="box">${v((d3.box||{})[i])}</div>`;});
+
+  $('#p-view').innerHTML=h;
+}
+</script>
+</body>
+</html>
